@@ -1,4 +1,4 @@
-serverUrl="http://10.16.153.2:5000"
+serverUrl="http://10.29.232.99:5000"
 
 async function changeLedState(state){
     const options={
@@ -13,3 +13,11 @@ async function changeLedState(state){
     console.log(body)
     document.getElementById("ledState").innerHTML=body.ledState
 }
+
+setInterval(async function(){
+    const response=await fetch(serverUrl+"/button")
+    const body=await response.json();
+    console.log(body.buttonState)
+    document.getElementById("buttonState").innerHTML=body.buttonState
+    
+    },1000)
