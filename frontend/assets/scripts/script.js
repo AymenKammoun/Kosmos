@@ -1,4 +1,4 @@
-serverUrl="http://10.29.232.99:5000"
+serverUrl="http://10.42.0.1:5000"
 
 async function changeLedState(state){
     const options={

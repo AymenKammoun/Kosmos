@@ -4,6 +4,8 @@ from threading import Thread
 import RPi.GPIO as GPIO
 import time
 
+#con
+
 app=Flask(__name__)
 CORS(app)
 
