@@ -4,16 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KOSMOS</title>
+  <script src="script.js"></script>
 </head>
 <body>
   <header>
     <nav>
       <ul>
         <li><a href="./index.html">KOSMOS</a></li>
-        <li><a href="./configuration.html">Configuration</a></li>
-        <li><a href="./Camera.html">Camera</a></li>
+        <li><a href="./config.html">Configuration</a></li>
+        <li><a href="./camera.html">Camera</a></li>
     </nav>
   </header>
-  
+
+  <div class="container">
+    <h1>Configuration Parameters</h1>
+    <form>
+        <div class="parameter">
+            <label for="param1">Parameter 1:</label>
+            <input type="text" id="param1Value" value="Value 1" readonly>
+            <button type="button" id="but1" onclick="modifyParameter('but1','param1Value')">Modify</button>
+        </div>
+
+        <div class="parameter">
+            <label for="param2">Parameter 2:</label>
+            <input type="text" id="param2Value" value="Value 2" >
+            <button type="button" id="but2" onclick="modifyParameter('but2','param2Value')">Modify</button>
+
+        </div>
+    </form>
+
+    <button id="rebootButton">Reboot</button>
+</div>
+
 </body>
 </html>
