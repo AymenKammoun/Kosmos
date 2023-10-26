@@ -1,4 +1,4 @@
-// Function to make a parameter value editable
+//Function to make a parameter value editable
 function modifyParameter(buttonId, paramId) {
   const button = document.getElementById(buttonId);
   const input = document.getElementById(paramId);
@@ -11,7 +11,14 @@ function modifyParameter(buttonId, paramId) {
     button.textContent = "Modify";
   }
 }
+
+document.getElementById("param1Value").value = "test44";
+document.getElementById("param2Value").value = getExternalValue();
+
+function getExternalValue() {
+  return "test2";
+}
 // Function to handle the "Reboot" button (dummy function)
 document.getElementById("rebootButton").addEventListener("click", function () {
-  alert("System reboot initiated.");
+  console.log("Reboot KOSMOS...");
 });

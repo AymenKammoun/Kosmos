@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="styles.css">
   <title>KOSMOS</title>
-  <script src="script.js"></script>
 </head>
+
 <body>
   <header>
     <nav>
@@ -19,22 +21,24 @@
   <div class="container">
     <h1>Configuration Parameters</h1>
     <form>
-        <div class="parameter">
-            <label for="param1">Parameter 1:</label>
-            <input type="text" id="param1Value" value="Value 1" readonly>
-            <button type="button" id="but1" onclick="modifyParameter('but1','param1Value')">Modify</button>
-        </div>
+      <div class="parameter">
+        <label for="param1">Parameter 1:</label>
+        <input type="text" id="param1Value" readonly>
+        <button type="button" id="but1" onclick="modifyParameter('but1','param1Value')">Modify</button>
+      </div>
 
-        <div class="parameter">
-            <label for="param2">Parameter 2:</label>
-            <input type="text" id="param2Value" value="Value 2" >
-            <button type="button" id="but2" onclick="modifyParameter('but2','param2Value')">Modify</button>
+      <div class="parameter">
+        <label for="param2">Parameter 2:</label>
+        <input type="text" id="param2Value" readonly>
+        <button type="button" id="but2" onclick="modifyParameter('but2','param2Value')">Modify</button>
 
-        </div>
+      </div>
     </form>
 
     <button id="rebootButton">Reboot</button>
-</div>
+  </div>
 
+  <script src="script.js"></script>
 </body>
+
 </html>
