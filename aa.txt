@@ -1,0 +1,61 @@
+from typing import List
+
+from PointSet import PointSet, FeaturesTypes
+
+
+from typing import List
+
+class Tree:
+  
+    def __init__(self,
+                 features: List[List[float]],
+                 labels: List[bool],
+                 types: List[FeaturesTypes],
+                 h: int = 1):
+      
+        self.points = PointSet(features, labels, types)
+        if len(features) == 0:
+            feature_to_split = None
+        else:
+            feature_to_split,_ = self.points.get_best_gain()
+            best_splitting = self.points.get_best_split()
+        features_0 = []
+        features_1 = []
+        labels_0 = []
+        labels_1 =[]
+        if feature_to_split == None or h == 0:
+                self.right_tree = None
+                self.left_tree = None
+        else:
+            for i in range(len(features)):
+                new_features=features[i].copy()
+                new_features.pop(feature_to_split)
+                if features[i][feature_to_split] == best_splitting:
+                    features_0.append(new_features)
+                    labels_0.append(labels[i])
+                else:
+                    features_1.append(new_features)
+                    labels_1.append(labels[i])
+            self.left_tree = Tree(features_1,labels_1,types,h-1)
+            self.right_tree = Tree(features_0,labels_0,types,h-1)
+
+            self.feature = feature_to_split
+            self.best_split = best_splitting
+        
+
+    def decide(self, features: List[float]) -> bool:
+      
+        if self.left_tree ==None or self.right_tree == None:
+            return self.majority_class()
+        
+        new_features=features.copy()
+        new_features.pop(self.feature)
+        if features[self.feature] == self.best_split :
+            return self.right_tree.decide(new_features)
+        else:
+            return self.left_tree.decide(new_features)
+        
+    def majority_class(self) -> bool:
+        count_class_0 = sum(1 for label in self.points.labels if not label)
+        count_class_1 = len(self.points.labels) - count_class_0
+        return count_class_1 > count_class_0
