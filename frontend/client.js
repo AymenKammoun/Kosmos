@@ -1,40 +1,56 @@
-configs = {
-  SETT_RECORD_TIME: "1800",
-  SETT_MOTOR_STOP_TIME: "20",
-  SETT_CSV_STEP_TIME: "5",
-  SETT_MODE: "1",
-  SETT_CSV_FILE_NAME: "Kosmos_CSV",
-  SETT_VIDEO_FILE_NAME: "kosmos",
-  SETT_VIDEO_RESOLUTION_X: "1920",
-  SETT_VIDEO_RESOLUTION_Y: "1080",
-  SETT_VIDEO_PREVIEW: "0",
-  SETT_SHUTDOWN: "1",
-  SETT_FRAMERATE: "24",
-  SETT_ESC_MOTOR_GPIO: "22",
-  SETT_RECORD_BUTTON_GPIO: "17",
-  SETT_STOP_BUTTON_GPIO: "23",
-  SETT_POWER_MOTOR_GPIO: "27",
-  SETT_MOTOR_BUTTON_GPIO: "21",
-  SETT_LED_B: "4",
-  SETT_LED_R: "18",
-  SETT_ESC_MOTOR_MAX_VAL: "2000",
-  SETT_ESC_MOTOR_MIN_VAL: "900",
-  SETT_ESC_MOTOR_FAVORITE_VAL: "1250",
-  SETT_MOTOR_RUN_TIME: "10",
-};
+serverUrl = "http://10.29.227.86:5000";
 
-function modifyParameter(buttonId, paramId) {
-  const button = document.getElementById(buttonId);
-  const input = document.getElementById(paramId);
+let configs;
 
-  if (button.textContent === "Modify") {
-    input.readOnly = false;
-    button.textContent = "Save";
-  } else {
-    input.readOnly = true;
+fetch(serverUrl + "/getConfig")
+  .then((response) => response.json())
+  .then((data) => {
+    // Use the data to update your frontend as needed
+    configs = data.data;
+  })
+  .catch((error) => {
+    console.error("Error fetching configs:", error);
+  });
+
+// Assuming you have a container element with the id "parametersContainer" in your HTML
+const parametersContainer = document.getElementById("parametersContainer");
+
+// Loop through the keys in the configs object
+for (const key in configs) {
+  if (configs.hasOwnProperty(key)) {
+    // Create a div element for each parameter
+    const parameterDiv = document.createElement("div");
+    parameterDiv.classList.add("parameter");
+
+    // Create a label element for the parameter
+    const label = document.createElement("label");
+    label.setAttribute("for", key);
+    label.textContent = key;
+
+    // Create an input element for the parameter
+    const input = document.createElement("input");
+    input.setAttribute("type", "text");
+    input.setAttribute("id", key);
+    input.setAttribute("readonly", true);
+    input.value = configs[key];
+
+    // Create a button element for modifying the parameter
+    const button = document.createElement("button");
+    button.setAttribute("type", "button");
+    button.setAttribute("id", `but_${key}`);
+    button.setAttribute("onclick", `modifyParameter('but_${key}','${key}')`);
     button.textContent = "Modify";
+
+    // Append label, input, and button to the parameter div
+    parameterDiv.appendChild(label);
+    parameterDiv.appendChild(input);
+    parameterDiv.appendChild(button);
+
+    // Append the parameter div to the container
+    parametersContainer.appendChild(parameterDiv);
   }
 }
+
 function updateInputValuesFromObject(data) {
   // Loop through the keys in the data object
   for (const key in data) {
@@ -50,17 +66,20 @@ function updateInputValuesFromObject(data) {
   }
 }
 
-// fetch("/api/configs")
-//   .then((response) => response.json())
-//   .then((data) => {
-//     // Use the data to update your frontend as needed
-//     updateInputValuesFromObject(data);
-//   })
-//   .catch((error) => {
-//     console.error("Error fetching configs:", error);
-//   });
-
-updateInputValuesFromObject(configs);
 document.getElementById("rebootButton").addEventListener("click", function () {
   console.log("Reboot KOSMOS...");
 });
+
+function modifyParameter(buttonId, paramId) {
+  const button = document.getElementById(buttonId);
+  const input = document.getElementById(paramId);
+
+  if (button.textContent === "Modify") {
+    input.readOnly = false;
+    button.textContent = "Save";
+  } else {
+    configs[paramId] = input.value;
+    input.readOnly = true;
+    button.textContent = "Modify";
+  }
+}

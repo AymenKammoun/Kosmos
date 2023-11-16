@@ -18,28 +18,11 @@
     </nav>
   </header>
 
-  <div class="container">
+  <div id="parametersContainer">
     <h1>Configuration Parameters</h1>
-    <form>
-      <div class="parameter">
-        <label for="param1">SETT_RECORD_TIME</label>
-        <input type="text" id="SETT_RECORD_TIME" readonly>
-        <button type="button" id="but1" onclick="modifyParameter('but1','SETT_RECORD_TIME')">Modify</button>
-      </div>
-      <div class="parameter">
-        <label for="param2">SETT_MOTOR_STOP_TIME</label>
-        <input type="text" id="SETT_MOTOR_STOP_TIME" readonly>
-        <button type="button" id="but2" onclick="modifyParameter('but2','SETT_MOTOR_STOP_TIME')">Modify</button>
-      </div>
-      <div class="parameter">
-        <label for="param3">SETT_CSV_STEP_TIME</label>
-        <input type="text" id="SETT_CSV_STEP_TIME" readonly>
-        <button type="button" id="but3" onclick="modifyParameter('but3','SETT_CSV_STEP_TIME')">Modify</button>
-      </div>
-    </form>
-
-    <button id="rebootButton">Reboot</button>
+    <form id="ParametersContainer">
   </div>
+  <button id="rebootButton">Reboot</button>
 
   <script src="client.js"></script>
 </body>
