@@ -1,74 +1,83 @@
-serverUrl = "http://10.29.227.86:5000";
+let serverUrl = "http://10.29.227.86:5500";
 
-let configs;
+let configsData;
 
-fetch(serverUrl + "/getConfig")
-  .then((response) => response.json())
-  .then((data) => {
-    // Use the data to update your frontend as needed
-    configs = data.data;
-  })
-  .catch((error) => {
-    console.error("Error fetching configs:", error);
-  });
+async function fetchConfig() {
+  try {
+    const response = await fetch(serverUrl + "/getConfig");
+    const data = await response.json();
 
-// Assuming you have a container element with the id "parametersContainer" in your HTML
-const parametersContainer = document.getElementById("parametersContainer");
+    // Assuming the response structure is { data: { ... }, status: "ok" }
+    if (data.status === "ok") {
+      const configContainer = document.getElementById("parametersContainer");
+      configsData = data.data;
 
-// Loop through the keys in the configs object
-for (const key in configs) {
-  if (configs.hasOwnProperty(key)) {
-    // Create a div element for each parameter
-    const parameterDiv = document.createElement("div");
-    parameterDiv.classList.add("parameter");
+      for (const key in configsData) {
+        const parameterDiv = document.createElement("div");
+        parameterDiv.classList.add("parameter");
 
-    // Create a label element for the parameter
-    const label = document.createElement("label");
-    label.setAttribute("for", key);
-    label.textContent = key;
+        const label = document.createElement("label");
+        label.textContent = key;
 
-    // Create an input element for the parameter
-    const input = document.createElement("input");
-    input.setAttribute("type", "text");
-    input.setAttribute("id", key);
-    input.setAttribute("readonly", true);
-    input.value = configs[key];
+        const input = document.createElement("input");
+        input.setAttribute("type", "text");
+        input.setAttribute("id", key);
+        input.value = configsData[key];
 
-    // Create a button element for modifying the parameter
-    const button = document.createElement("button");
-    button.setAttribute("type", "button");
-    button.setAttribute("id", `but_${key}`);
-    button.setAttribute("onclick", `modifyParameter('but_${key}','${key}')`);
-    button.textContent = "Modify";
-
-    // Append label, input, and button to the parameter div
-    parameterDiv.appendChild(label);
-    parameterDiv.appendChild(input);
-    parameterDiv.appendChild(button);
-
-    // Append the parameter div to the container
-    parametersContainer.appendChild(parameterDiv);
+        parameterDiv.appendChild(label);
+        parameterDiv.appendChild(input);
+        configContainer.appendChild(parameterDiv);
+      }
+    } else {
+      console.error("Failed to fetch configuration:", data.status);
+    }
+  } catch (error) {
+    console.error("Error fetching configuration:", error);
   }
 }
 
-function updateInputValuesFromObject(data) {
-  // Loop through the keys in the data object
-  for (const key in data) {
-    if (data.hasOwnProperty(key)) {
-      // Find the input element by its id
-      const inputElement = document.getElementById(key);
+await fetchConfig();
 
-      // If the input element exists, update its value
-      if (inputElement) {
-        inputElement.value = data[key];
-      }
+async function updateConfigOnServer(updatedConfig) {
+  try {
+    const response = await fetch(serverUrl + "/changeConfig", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedConfig),
+    });
+
+    const data = await response.json();
+
+    // Assuming the response structure is { status: "ok" }
+    if (data.status === "ok") {
+      console.log("Configuration updated on the server");
+    } else {
+      console.error(
+        "Failed to update configuration on the server:",
+        data.status
+      );
+    }
+  } catch (error) {
+    console.error("Error updating configuration on the server:", error);
+  }
+}
+
+function saveConfig() {
+  const updatedConfig = {};
+
+  // Collect updated values from the input elements
+  for (const key in configsData) {
+    const inputElement = document.getElementById(key);
+    if (inputElement) {
+      updatedConfig[key] = inputElement.value;
     }
   }
-}
 
-document.getElementById("rebootButton").addEventListener("click", function () {
-  console.log("Reboot KOSMOS...");
-});
+  // Send the updated configuration to the server
+  updateConfigOnServer(updatedConfig);
+}
 
 function modifyParameter(buttonId, paramId) {
   const button = document.getElementById(buttonId);
@@ -78,8 +87,15 @@ function modifyParameter(buttonId, paramId) {
     input.readOnly = false;
     button.textContent = "Save";
   } else {
-    configs[paramId] = input.value;
+    configsData[paramId] = input.value;
     input.readOnly = true;
     button.textContent = "Modify";
+    console.log("Configurations updated locally:", configsData);
   }
 }
+
+document
+  .getElementById("rebootButton")
+  .addEventListener("click", async function () {
+    await saveConfig();
+  });

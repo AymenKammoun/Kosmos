@@ -1,0 +1,82 @@
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  display: inline;
+  margin-right: 20px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #fff;
+}
+
+h1 {
+  text-align: center;
+}
+
+#parametersContainer {
+  text-align: center;
+}
+
+.parameter {
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 300px; /* Adjust the width as needed */
+  box-sizing: border-box;
+}
+
+.label-input-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+label {
+  flex: 1;
+  margin-right: 10px;
+}
+
+input {
+  flex: 2;
+  width: calc(100% - 20px);
+  box-sizing: border-box;
+  margin-bottom: 5px;
+}
+
+button {
+  flex: 1;
+  background-color: rgb(90, 222, 255);
+  color: #fff;
+  border: none;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 100%;
+}
+
+#rebootButton {
+  display: block;
+  margin: 20px auto;
+}
