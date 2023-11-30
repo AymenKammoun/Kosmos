@@ -1,4 +1,4 @@
-let serverUrl = "http://10.29.227.86:5500";
+let serverUrl = "http://10.29.225.198:5000";
 
 let configsData;
 
@@ -22,10 +22,20 @@ async function fetchConfig() {
         const input = document.createElement("input");
         input.setAttribute("type", "text");
         input.setAttribute("id", key);
+        input.setAttribute("readonly", "");
         input.value = configsData[key];
+
+        const button = document.createElement("button");
+        button.setAttribute("type", "button");
+        button.setAttribute("id", "button" + key);
+        button.textContent = "Modify";
+        button.addEventListener("click", () =>
+          modifyParameter("button" + key, key)
+        );
 
         parameterDiv.appendChild(label);
         parameterDiv.appendChild(input);
+        parameterDiv.appendChild(button);
         configContainer.appendChild(parameterDiv);
       }
     } else {
@@ -36,7 +46,7 @@ async function fetchConfig() {
   }
 }
 
-await fetchConfig();
+fetchConfig();
 
 async function updateConfigOnServer(updatedConfig) {
   try {
@@ -64,21 +74,6 @@ async function updateConfigOnServer(updatedConfig) {
   }
 }
 
-function saveConfig() {
-  const updatedConfig = {};
-
-  // Collect updated values from the input elements
-  for (const key in configsData) {
-    const inputElement = document.getElementById(key);
-    if (inputElement) {
-      updatedConfig[key] = inputElement.value;
-    }
-  }
-
-  // Send the updated configuration to the server
-  updateConfigOnServer(updatedConfig);
-}
-
 function modifyParameter(buttonId, paramId) {
   const button = document.getElementById(buttonId);
   const input = document.getElementById(paramId);
@@ -87,15 +82,24 @@ function modifyParameter(buttonId, paramId) {
     input.readOnly = false;
     button.textContent = "Save";
   } else {
-    configsData[paramId] = input.value;
-    input.readOnly = true;
-    button.textContent = "Modify";
-    console.log("Configurations updated locally:", configsData);
+    // Check if the new value is a number
+    const newValue = input.value;
+    if (!isNaN(newValue)) {
+      // Update only if the new value is of the same type
+      configsData[paramId] = newValue;
+      input.readOnly = true;
+      button.textContent = "Modify";
+      console.log("Configurations updated locally:", configsData);
+    } else {
+      // Display an error if the new value is not a number
+      alert("Error: Please enter a valid number.");
+    }
   }
 }
 
 document
   .getElementById("rebootButton")
-  .addEventListener("click", async function () {
-    await saveConfig();
+  .addEventListener("click", function (event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+    updateConfigOnServer(configsData);
   });
