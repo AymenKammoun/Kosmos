@@ -9,12 +9,16 @@ import RPi.GPIO as GPIO
 import os
 
 
+
 import numpy as np
-from threading import Thread
 from flask_cors import CORS
 from flask import Flask,request,make_response
 from PIL import Image
 import io
+
+
+from threading import Thread
+
 
 
 import kosmos_config as KConf
@@ -50,6 +54,7 @@ class kosmos_main():
         self.stop_event = Event()    # l'ILS du shutdown or stop record activé
         self.motor_event = Event()  # l'ILS du moteur activé
         self.init()
+        print("-------creaaated !!!!!!!! ---")
 
     def init(self):
         # Lecture du fichier de configuration
@@ -308,20 +313,6 @@ myMain = kosmos_main()
 app=Flask(__name__)
 CORS(app)
 
-@app.route("/frame",methods=['GET'])
-def image():
-    camera=myMain.thread_camera._camera
-    camera.resolution=(320,240)
-    shape=(camera.resolution[1],camera.resolution[0],3)
-    frame=np.empty(shape,dtype=np.uint8)
-    camera.capture(frame,'rgb')
-    camera.resolution = (myMain.thread_camera._X_RESOLUTION, myMain.thread_camera._Y_RESOLUTION)
-    image=Image.fromarray(frame)
-    buf=io.BytesIO()
-    image.save(buf,format='jpeg')
-    response=make_response(buf.getvalue())
-    response.headers['Content-Type']='image/jpg'
-    return response
 
 @app.route("/state")
 def index():
@@ -383,8 +374,46 @@ def getConfig():
     response=dict()
     response["data"]=dict(myMain._conf.config["KOSMOS"])
     response["status"]="ok"
+    return response  
+
+
+@app.route("/getRecords")
+def getRecords():
+    response=dict()
+    stream =os.popen('ls -l /media/kosmos/kosmoscle3/Video')
+    streamOutput = stream.read()
+    listTemp = streamOutput.split('-rwxrwxrwx ')[1:]
+    outputList=[]
+    for e in listTemp:
+        d=dict()
+        data=e.split()
+        d["size"]="{:.4f}".format(int(data[3])/(1024**2))
+        d["month"]=data[4]
+        d["day"]=data[5]
+        d["time"]=data[6]
+        d["fileName"]=data[7]
+        outputList.append(d)
+    response["data"]=outputList
+    response["status"]="ok"
     return response
-        
+    
+    
+
+@app.route("/frame",methods=['GET'])
+def image():
+    camera=myMain.thread_camera._camera
+    camera.resolution=(320,240)
+    shape=(camera.resolution[1],camera.resolution[0],3)
+    frame=np.empty(shape,dtype=np.uint8)
+    camera.capture(frame,'rgb')
+    camera.resolution = (myMain.thread_camera._X_RESOLUTION, myMain.thread_camera._Y_RESOLUTION)
+    image=Image.fromarray(frame)
+    buf=io.BytesIO()
+    image.save(buf,format='jpeg')
+    response=make_response(buf.getvalue())
+    response.headers['Content-Type']='image/jpg'
+    return response
+
 
 def flaskMain():
     print("Webserver running...")

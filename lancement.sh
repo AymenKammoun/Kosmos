@@ -1,5 +1,5 @@
 #!/bin/bash
-sleep 20
+sleep 2
 
 #Deplacement du fichier kosmos_config.ini dans la cle USB
 #sudo cp -n /home/kosmos/kosmos_software/kosmos_config.ini /media/kosmos/kosmoscle3
