@@ -1,4 +1,4 @@
-let serverUrl = "http://10.29.225.198:5000";
+let serverUrl = "http://10.42.0.1:5000";
 
 let configsData;
 
@@ -9,7 +9,7 @@ async function fetchConfig() {
 
     // Assuming the response structure is { data: { ... }, status: "ok" }
     if (data.status === "ok") {
-      const configContainer = document.getElementById("parametersContainer");
+      const configContainer = document.getElementById("container");
       configsData = data.data;
 
       for (const key in configsData) {
@@ -17,20 +17,24 @@ async function fetchConfig() {
         parameterDiv.classList.add("parameter");
 
         const label = document.createElement("label");
+        label.setAttribute("for", "param" + key);
+        label.classList.add("parameter-element");
         label.textContent = key;
 
         const input = document.createElement("input");
         input.setAttribute("type", "text");
         input.setAttribute("id", key);
         input.setAttribute("readonly", "");
+        input.classList.add("parameter-element");
         input.value = configsData[key];
 
         const button = document.createElement("button");
         button.setAttribute("type", "button");
-        button.setAttribute("id", "button" + key);
+        button.setAttribute("id", "but" + key);
+        button.classList.add("parameter-element");
         button.textContent = "Modify";
         button.addEventListener("click", () =>
-          modifyParameter("button" + key, key)
+          modifyParameter("but" + key, key)
         );
 
         parameterDiv.appendChild(label);
@@ -38,6 +42,13 @@ async function fetchConfig() {
         parameterDiv.appendChild(button);
         configContainer.appendChild(parameterDiv);
       }
+
+      // Add Reboot button after the parameter divs
+      const rebootButton = document.createElement("button");
+      rebootButton.setAttribute("id", "rebootButton");
+      rebootButton.textContent = "Reboot";
+      rebootButton.classList.add("reboot");
+      configContainer.appendChild(rebootButton);
     } else {
       console.error("Failed to fetch configuration:", data.status);
     }
@@ -82,18 +93,25 @@ function modifyParameter(buttonId, paramId) {
     input.readOnly = false;
     button.textContent = "Save";
   } else {
+    // Check if the original value is a number
+    const originalValue = configsData[paramId];
+    const isOriginalValueNumber = !isNaN(originalValue);
+
     // Check if the new value is a number
     const newValue = input.value;
-    if (!isNaN(newValue)) {
-      // Update only if the new value is of the same type
-      configsData[paramId] = newValue;
-      input.readOnly = true;
-      button.textContent = "Modify";
-      console.log("Configurations updated locally:", configsData);
-    } else {
-      // Display an error if the new value is not a number
+    const isNewValueNumber = !isNaN(newValue);
+
+    if (isOriginalValueNumber && !isNewValueNumber) {
+      // Display an error if the original value is a number and the new value is not
       alert("Error: Please enter a valid number.");
+      return; // Exit the function without updating the configuration
     }
+
+    // Update only if the new value is of the same type
+    configsData[paramId] = newValue;
+    input.readOnly = true;
+    button.textContent = "Modify";
+    console.log("Configurations updated locally:", configsData);
   }
 }
 
