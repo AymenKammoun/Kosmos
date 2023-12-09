@@ -54,6 +54,37 @@ a:hover {
   padding: 20px;
 }
 
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+table,
+th,
+td {
+  border: 1px solid #ddd;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #007bff;
+  color: #fff;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #ddd;
+}
+
 h1 {
   margin-left: 10px;
 }
@@ -73,6 +104,11 @@ h1 {
   margin: 10px;
   align-items: center;
   vertical-align: middle;
+}
+#frame {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px; /* Adjust margin for consistency with other page */
 }
 
 label {
@@ -138,6 +174,31 @@ button:hover {
     border-style: solid;
     border-width: 2px;
     border-radius: 5px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+  }
+
+  th,
+  td {
+    padding: 8px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  tr:hover {
+    background-color: #ddd;
   }
 
   nav ul {
@@ -224,5 +285,8 @@ button:hover {
 
   #rebootButton:hover {
     background-color: #45a049;
+  }
+  #frame {
+    margin-top: 5px;
   }
 }

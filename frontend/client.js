@@ -46,6 +46,7 @@ async function fetchConfig() {
       // Add Reboot button after the parameter divs
       const rebootButton = document.createElement("button");
       rebootButton.setAttribute("id", "rebootButton");
+      rebootButton.setAttribute("type", "button");
       rebootButton.textContent = "Reboot";
       rebootButton.classList.add("reboot");
       configContainer.appendChild(rebootButton);
@@ -55,6 +56,12 @@ async function fetchConfig() {
   } catch (error) {
     console.error("Error fetching configuration:", error);
   }
+  document
+    .getElementById("rebootButton")
+    .addEventListener("click", function (event) {
+      event.preventDefault(); // Prevent the default form submission behavior
+      updateConfigOnServer(configsData);
+    });
 }
 
 fetchConfig();
@@ -114,10 +121,3 @@ function modifyParameter(buttonId, paramId) {
     console.log("Configurations updated locally:", configsData);
   }
 }
-
-document
-  .getElementById("rebootButton")
-  .addEventListener("click", function (event) {
-    event.preventDefault(); // Prevent the default form submission behavior
-    updateConfigOnServer(configsData);
-  });

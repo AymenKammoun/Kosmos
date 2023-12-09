@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="cameraStyles.css">
+	<link rel="stylesheet" type="text/css" href="styles.css">
 	<title>Kosmos</title>
 </head>
 
@@ -12,22 +12,22 @@
 	<header>
 		<nav>
 			<ul>
-				<li><a href="./index.html">KOSMOS</a></li>
+				<li><a href="./records.html">Records</a></li>
 				<li><a href="./config.html">Configuration</a></li>
 				<li><a href="./camera.html">Camera</a></li>
 		</nav>
 	</header>
-	<div>
-		<h2>State</h2>
+	<div class="container">
+		<h1>State</h1>
 		<p>Etat : <span id="etat">Unknown</span></p>
 	</div>
-	<div>
-		<h2>Buttons</h2>
+	<div class="container">
+		<h1>Buttons</h1>
 		<button onClick="start()">Start</button>
 		<button onClick="stop()">Stop</button>
 	</div>
-	<div>
-		<h2>Live video</h2>
+	<div class="container">
+		<h1>Live video</h1>
 		<button onClick="setLive(true)">Start Live</button>
 		<button onClick="setLive(false)">Stop Live</button>
 		<br>
