@@ -1,25 +1,15 @@
 #!/usr/bin/env python3 -- coding: utf-8 --
 """ Programme principal du KOSMOS en mode rotation Utilse une machine d'états D Hanon 12 décembre 2020 """
-
 import logging
 import time
 from threading import Event
-from enum import Enum, unique
 import RPi.GPIO as GPIO
 import os
 
 
-
-import numpy as np
-from flask_cors import CORS
-from flask import Flask,request,make_response
-from PIL import Image
-import io
-
-
 from threading import Thread
-
-
+import kosmos_backend as KBackend
+from komos_state import KState
 
 import kosmos_config as KConf
 import kosmos_csv as KCsv
@@ -35,14 +25,6 @@ logging.basicConfig(level=logging.DEBUG,
                     filename='kosmos.log')
 
 
-@unique
-class KState(Enum):
-    """Etats du kosmos"""
-    STARTING = 0
-    STANDBY = 1
-    WORKING = 2
-    STOPPING = 3
-    SHUTDOWN = 4
 
 
 class kosmos_main():
@@ -54,7 +36,6 @@ class kosmos_main():
         self.stop_event = Event()    # l'ILS du shutdown or stop record activé
         self.motor_event = Event()  # l'ILS du moteur activé
         self.init()
-        print("-------creaaated !!!!!!!! ---")
 
     def init(self):
         # Lecture du fichier de configuration
@@ -310,114 +291,13 @@ def motor_cb(channel):
         myMain.button_event.set()
 
 myMain = kosmos_main()
-app=Flask(__name__)
-CORS(app)
+server = KBackend.Server(myMain)
 
 
-@app.route("/state")
-def index():
-    return {
-        "status" : "ok",
-        "state" : str(myMain.state)
-    }
-    
-@app.route("/start")
-def start():
-    if(myMain.state==KState.STANDBY):   
-        myMain.record_event.set() 
-        myMain.button_event.set()
-        return {
-            "status" : "ok"
-        }
-    else :
-        return {
-            "status" : "error"
-        }
-
-@app.route("/stop")
-def stop():
-    if(myMain.state==KState.WORKING):
-        myMain.record_event.set()
-        myMain.button_event.set()
-        return {
-            "status" : "ok"
-        }
-    else :
-        return {
-            "status" : "error"
-        }
-    
-@app.route("/changeConfig", methods=['POST'])
-def changeConfig():
-    if(myMain.state==KState.STANDBY):
-        data = request.json
-        for key in data:
-            myMain._conf.set_val(key,data[key])
-        myMain._conf.update_file()
-        myMain.thread_camera.closeCam()
-        del myMain.motorThread
-        del myMain.thread_camera
-        myMain.init()
-        myMain.button_event.set()
-        return {
-            "status" : "ok"
-        }
-    else:
-        return {
-            "status" : "error"
-        }
-    
-    
-
-@app.route("/getConfig")
-def getConfig():
-    response=dict()
-    response["data"]=dict(myMain._conf.config["KOSMOS"])
-    response["status"]="ok"
-    return response  
-
-
-@app.route("/getRecords")
-def getRecords():
-    response=dict()
-    stream =os.popen('ls -l /media/kosmos/kosmoscle3/Video')
-    streamOutput = stream.read()
-    listTemp = streamOutput.split('-rwxrwxrwx ')[1:]
-    outputList=[]
-    for e in listTemp:
-        d=dict()
-        data=e.split()
-        d["size"]="{:.4f}".format(int(data[3])/(1024**2))
-        d["month"]=data[4]
-        d["day"]=data[5]
-        d["time"]=data[6]
-        d["fileName"]=data[7]
-        outputList.append(d)
-    response["data"]=outputList
-    response["status"]="ok"
-    return response
-    
-    
-
-@app.route("/frame",methods=['GET'])
-def image():
-    camera=myMain.thread_camera._camera
-    camera.resolution=(320,240)
-    shape=(camera.resolution[1],camera.resolution[0],3)
-    frame=np.empty(shape,dtype=np.uint8)
-    camera.capture(frame,'rgb')
-    camera.resolution = (myMain.thread_camera._X_RESOLUTION, myMain.thread_camera._Y_RESOLUTION)
-    image=Image.fromarray(frame)
-    buf=io.BytesIO()
-    image.save(buf,format='jpeg')
-    response=make_response(buf.getvalue())
-    response.headers['Content-Type']='image/jpg'
-    return response
 
 
 def flaskMain():
-    print("Webserver running...")
-    app.run(host="0.0.0.0",port=5000,debug=False)
+    server.run()
     
 def main():
     # Liens entre les boutons et les fonction de callback
