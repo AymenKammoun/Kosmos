@@ -13,21 +13,21 @@ Vue que le software de base est développer par la language Python, On a décid�
 
 ### Description des API
 -   GET /state :
-Cette requette retourne l'etat du systéme
-#### Exemple de réponse :
-```json
-{
-    "state": "KState.STANDBY",
-    "status": "ok"
-}
-```
+    Cette requette retourne l'etat du systéme
+    #### Exemple de réponse :
+    ```json
+    {
+        "state": "KState.STANDBY",
+        "status": "ok"
+    }
+    ```
 
-#### Implémentation
-```python
-   def state(self):
-        return {
-            "status" : "ok",
-            "state" : str(self.myMain.state)
-        }
-```
+    #### Implémentation
+    ```python
+    def state(self):
+            return {
+                "status" : "ok",
+                "state" : str(self.myMain.state)
+            }
+    ```
 
