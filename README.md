@@ -54,7 +54,7 @@ Vue que le software de base est développer par la language Python, On a décid�
         }
     ```
 
-    -   GET /stop :
+-   GET /stop :
     Cette requette arrete l'enregistrement.
     #### Exemple de réponse :
     ```json
@@ -78,7 +78,7 @@ Vue que le software de base est développer par la language Python, On a décid�
             }
     ```
 
-    -   POST /changeConfig :
+-   POST /changeConfig :
     Cette requette change la configuration.
 
     #### Exemple de body requete :
@@ -117,7 +117,7 @@ Vue que le software de base est développer par la language Python, On a décid�
             }
     ```
 
-    -   GET /getConfig :
+-   GET /getConfig :
     Cette requette retourne toute la configuration actuelle.
     #### Exemple de réponse :
     ```json
@@ -159,7 +159,7 @@ Vue que le software de base est développer par la language Python, On a décid�
         return response  
     ```
 
-    -   GET /getRecord :
+-   GET /getRecord :
     Cette requette retourne des informations sur les derinier enregistrement.
     #### Exemple de réponse :
     ```json
@@ -214,7 +214,7 @@ Vue que le software de base est développer par la language Python, On a décid�
     ```
 
 
-    -   GET /image :
+-   GET /image :
     Cette requette retourne une image JPG issu de la camera au moment du requete.
     #### Exemple de réponse :
     (exmple d'image aprés)
