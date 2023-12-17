@@ -6,9 +6,13 @@ from threading import Event
 import RPi.GPIO as GPIO
 import os
 
-
+#Le programme est divisé en deux threads donc on a besoind du bibliotheque Thread
 from threading import Thread
+
+#Tous les methodes de l'API sont dans le fichier kosmos_backend.py
 import kosmos_backend as KBackend
+
+#Isolation du class KState dans le fichier kosmos_state.py
 from komos_state import KState
 
 import kosmos_config as KConf
@@ -29,6 +33,11 @@ logging.basicConfig(level=logging.DEBUG,
 
 class kosmos_main():
 
+    """ 
+        On a diviser l'initialisation on deux methodes:
+        Dans le constructeur, on a conservé la creation des evenement qui doit s'executé seulement une fois dans tous le programme.
+        Une methode init() qui contient le reste d'initialisation qui peut étre appeler plusieur fois au besoin.
+    """
     def __init__(self):
          # évènements
         self.button_event = Event()  # un ILS a été activé
@@ -290,15 +299,19 @@ def motor_cb(channel):
         myMain.motor_event.set()
         myMain.button_event.set()
 
+#Instance du classe principale
 myMain = kosmos_main()
+
+#Instance du classe Server
 server = KBackend.Server(myMain)
 
 
 
-
+#Le targuet du Thread t2 qui est le thread du backend.
 def flaskMain():
     server.run()
     
+#Le targuet du Thread t1 qui est le thread du programme principale.
 def main():
     # Liens entre les boutons et les fonction de callback
     GPIO.add_event_detect(myMain.STOP_BUTTON_GPIO, GPIO.FALLING, callback=stop_cb, bouncetime=500)
@@ -308,8 +321,10 @@ def main():
     # Debut prog principal :
     myMain.modeRotatif()
 
+#Creation des deux threads t1 et t2
 t1=Thread(target=main,args=[])
 t2=Thread(target=flaskMain,args=[])
 
+#Lancement des deux threads
 t1.start()
 t2.start()

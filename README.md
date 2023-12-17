@@ -235,3 +235,15 @@ Vue que le software de base est développer par la language Python, On a décid�
         response.headers['Content-Type']='image/jpg'
         return response    
     ```
+## Raspberry Pi en tant que Point d'acces
+Etant donné que nous travallion dans un context locale, le raspberry pi et le terminal mobile doivent etre dans les meme réseau local.
+La meilleur solution est de configurer la carte Raspberry comme un point d'acces WiFi pour des differents raison. Avec cette approche, le systéme peut fonctionner sans la présence d'un autre dispositif pour assurer la lisaison entre le raspberry et le mobile. Aussi ce choix va garantir sytematiquement une addresse ip fixe de la carte ( 10.42.0.1 ) .
+### Etape de configuration
+-   Tous d'abord, il faut changer "The network configuration" de "dhcpcd" à "NetworkManager". Pour cela on tape cette commande :
+```shell
+    sudo raspi-config
+```
+-   Puis, naviguer à "Advance Options" > "Network Config" > " NetworkManager".
+- Clicker sur "Ok" > "Finish" et redemarrer la carte.
+- Enfin, apres redemarage. On peut créer un point d'acces apartir de l'icone de wifi on haut à droite puis Advanced Options
+## Description de la partie Frontend
