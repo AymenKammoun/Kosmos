@@ -1,6 +1,5 @@
-let serverUrl = "http://10.42.0.1:5000";
-// serverUrl = "http://10.29.225.198:5000";
-live = false;
+let serverUrl = "http://10.29.225.198:5000";
+let live = false;
 
 async function start() {
   const response = await fetch(serverUrl + "/start");
@@ -22,10 +21,25 @@ async function getImage() {
   image.src = imageObjectURL;
 }
 
-function setLive(state) {
-  live = state;
-  if (live) {
-    frameLoop();
+async function setLive(state) {
+  try {
+    const response = await fetch(serverUrl + "/state");
+    const body = await response.json();
+
+    if (state) {
+      if (body.state === "KState.STANDBY") {
+        live = true;
+        frameLoop();
+      } else {
+        alert(
+          "Cannot start live video while the camera is not in STANDBY state."
+        );
+      }
+    } else {
+      live = false;
+    }
+  } catch (error) {
+    console.error("Error fetching camera state:", error);
   }
 }
 
