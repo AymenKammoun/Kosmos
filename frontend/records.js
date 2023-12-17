@@ -1,6 +1,9 @@
+// This variable holds the URL of the server where the backend is hosted
 let serverUrl = "http://10.42.0.1:5000";
+// Alternative server URL (commented out)
 // let serverUrl = "http://10.29.225.198:5000";
 
+// Function to fetch records data from the server
 async function fetchData() {
   try {
     const response = await fetch(serverUrl + "/getRecords");
@@ -12,11 +15,11 @@ async function fetchData() {
   }
 }
 
-// Function to populate the table with data
+// Function to populate the table with records data
 async function populateTable() {
   const fileTable = document.getElementById("fileTable");
 
-  // Fetch data from the API
+  // Fetch records data from the API
   const records = await fetchData();
 
   // Iterate over records and create table rows

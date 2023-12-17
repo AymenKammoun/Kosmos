@@ -1,8 +1,12 @@
+// This variable holds the URL of the server where the backend is hosted
 let serverUrl = "http://10.42.0.1:5000";
+// Alternative server URL (commented out)
 // let serverUrl = "http://10.29.225.198:5000";
 
+// Variable to store configuration data fetched from the server
 let configsData;
 
+// Function to fetch the configuration from the server and dynamically generate the form
 async function fetchConfig() {
   try {
     const response = await fetch(serverUrl + "/getConfig");
@@ -13,6 +17,7 @@ async function fetchConfig() {
       const configContainer = document.getElementById("container");
       configsData = data.data;
 
+      // Loop through each configuration parameter and create corresponding form elements
       for (const key in configsData) {
         const parameterDiv = document.createElement("div");
         parameterDiv.classList.add("parameter");
@@ -57,6 +62,8 @@ async function fetchConfig() {
   } catch (error) {
     console.error("Error fetching configuration:", error);
   }
+
+  // Add event listener to the Reboot button
   document
     .getElementById("rebootButton")
     .addEventListener("click", function (event) {
@@ -65,8 +72,10 @@ async function fetchConfig() {
     });
 }
 
+// Fetch the configuration when the page loads
 fetchConfig();
 
+// Function to update the configuration on the server
 async function updateConfigOnServer(updatedConfig) {
   try {
     const response = await fetch(serverUrl + "/changeConfig", {
@@ -93,6 +102,7 @@ async function updateConfigOnServer(updatedConfig) {
   }
 }
 
+// Function to enable modification of a configuration parameter
 function modifyParameter(buttonId, paramId) {
   const button = document.getElementById(buttonId);
   const input = document.getElementById(paramId);
