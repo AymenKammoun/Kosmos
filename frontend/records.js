@@ -1,4 +1,5 @@
-let serverUrl = "http://10.29.225.198:5000";
+let serverUrl = "http://10.42.0.1:5000";
+// let serverUrl = "http://10.29.225.198:5000";
 
 async function fetchData() {
   try {
@@ -23,9 +24,26 @@ async function populateTable() {
     const row = fileTable.insertRow();
     row.insertCell().textContent = record.fileName;
     row.insertCell().textContent = record.size;
-    row.insertCell().textContent = record.time;
-    row.insertCell().textContent = record.day;
-    row.insertCell().textContent = record.month;
+
+    // Merge Time, Day, and Month into a single column
+    const timeCell = row.insertCell();
+    timeCell.textContent = `${record.time} h - ${record.day} ${record.month}`;
+  });
+
+  // Get all rows, excluding the header
+  const rows = Array.from(fileTable.getElementsByTagName("tr")).slice(1);
+
+  // Reverse the order of rows
+  rows.reverse();
+
+  // Clear existing rows in the table
+  while (fileTable.rows.length > 1) {
+    fileTable.deleteRow(1);
+  }
+
+  // Reinsert rows in reverse order
+  rows.forEach((row) => {
+    fileTable.appendChild(row);
   });
 }
 
