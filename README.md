@@ -332,5 +332,3 @@ Le fichier CSS (`styles.css`) fournit des styles pour un design cohérent et ré
 - Inclut des requêtes multimédias pour assurer un affichage approprié sur des écrans de largeurs variables.
 
 **Remarque :** Assurez-vous que les fichiers frontend sont hébergés et accessibles, et mettez à jour la variable `serverUrl` dans les fichiers JavaScript avec l'URL correcte du serveur backend.
-
-N'hésitez pas à personnaliser le style et la fonctionnalité selon les besoins de votre projet.
