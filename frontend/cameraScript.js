@@ -1,4 +1,6 @@
-let serverUrl = "http://10.29.225.198:5000";
+let serverUrl = "http://10.42.0.1:5000";
+// let serverUrl = "http://10.29.225.198:5000";
+
 let live = false;
 
 async function start() {
