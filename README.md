@@ -240,12 +240,12 @@ Vu que le logiciel de base est développé en langage Python, nous avons décid�
       return response
   ```
 
-- GET /image :
+- GET /frame :
   Cette requête retourne une image JPG issue de la caméra au moment de la requête.
 
   #### Exemple de réponse :
 
-  (exmple d'image aprés)
+ <img src="doc/imgs/frame.png" width="600">
 
   #### Implémentation
 
